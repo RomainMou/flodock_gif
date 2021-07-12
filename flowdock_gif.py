@@ -3,10 +3,11 @@
 import json
 import requests
 import argparse
+from pathlib import Path
 from dotenv import dotenv_values
 
 # Load conf
-config = dotenv_values(".env")
+config = dotenv_values("{}/.env".format(Path(__file__).parent.absolute()))
 
 # Parse arguments
 parser = argparse.ArgumentParser()
