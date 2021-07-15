@@ -1,5 +1,6 @@
 #! /usr/bin/python3
 
+import sys
 import json
 import requests
 import argparse
@@ -24,12 +25,19 @@ gif_r = requests.get(
     }
 )
 
-# Send the gif
-requests.post(
-    "https://api.flowdock.com/private/{}/messages".format(args.user),
-    auth = (config['FLOWDOCK_API_TOKEN'], ''),
-    json = {
-        "event": "message",
-        "content": json.loads(gif_r.text)['data']['image_url']
-    }
-)
+gif_r_dict = json.loads(gif_r.text)
+
+if gif_r_dict['data']:
+    gif_url = gif_r_dict['data']['image_url']
+    print("Sending '{}' gif.".format(gif_url))
+    requests.post(
+       "https://api.flowdock.com/private/{}/messages".format(args.user),
+       auth = (config['FLOWDOCK_API_TOKEN'], ''),
+       json = {
+           "event": "message",
+           "content": gif_url
+       }
+    )
+else:
+    print("No gif found for '{}'.".format(args.tag), file=sys.stderr)
+    sys.exit(1)
