@@ -35,7 +35,7 @@ if gif_r_dict['data']:
        auth = (config['FLOWDOCK_API_TOKEN'], ''),
        json = {
            "event": "message",
-           "content": gif_url
+           "content": "/giphy " + args.tag + "\n" + gif_url
        }
     )
 else:
