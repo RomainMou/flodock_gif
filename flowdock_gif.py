@@ -7,7 +7,7 @@ from pathlib import Path
 from dotenv import dotenv_values
 
 # Load conf
-config = dotenv_values("{}/.env".format(Path(__file__).parent.absolute()))
+config = dotenv_values(f"{Path(__file__).parent.absolute()}/.env")
 
 # Parse arguments
 parser = argparse.ArgumentParser()
