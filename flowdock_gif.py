@@ -11,7 +11,8 @@ config = dotenv_values(f"{Path(__file__).parent.absolute()}/.env")
 
 # Parse arguments
 parser = argparse.ArgumentParser()
-parser.add_argument(
+requiredNamed = parser.add_argument_group("required named arguments")
+requiredNamed.add_argument(
     "-u", "--user", help="Flowdock user recipient id", type=int, required=True
 )
 parser.add_argument(
