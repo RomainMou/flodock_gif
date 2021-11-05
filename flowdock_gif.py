@@ -21,14 +21,15 @@ gif_r = requests.get(
     'https://api.giphy.com/v1/gifs/random',
     params = {
         "tag": args.tag,
-        "api_key": config['GIPHY_API_KEY']
+        "api_key": config['GIPHY_API_KEY'],
+        "rating": "pg-13"
     }
 )
 
 gif_r_dict = json.loads(gif_r.text)
 
 if gif_r_dict['data']:
-    gif_url = gif_r_dict['data']['image_url']
+    gif_url = gif_r_dict['data']['images']['original']['url'].split('?')[0]
     print("Sending '{}' gif.".format(gif_url))
     requests.post(
        "https://api.flowdock.com/private/{}/messages".format(args.user),
