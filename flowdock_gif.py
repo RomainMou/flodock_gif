@@ -18,13 +18,27 @@ requiredNamed.add_argument(
 parser.add_argument(
     "-t", "--tag", help="Giphy tag for the random search", type=str, default="unicorn"
 )
+parser.add_argument(
+    "-i",
+    "--id",
+    help="Giphy gif ID to send a specific gif instead of a random one",
+    type=str,
+)
+
 args = parser.parse_args()
 
-# Get a random gif
-gif_r = requests.get(
-    "https://api.giphy.com/v1/gifs/random",
-    params={"tag": args.tag, "api_key": config["GIPHY_API_KEY"], "rating": "pg-13"},
-)
+if args.id:
+    # Retrieve specific gif
+    gif_r = requests.get(
+        f"https://api.giphy.com/v1/gifs/{args.id}",
+        params={"api_key": config["GIPHY_API_KEY"]},
+    )
+else:
+    # Get a random gif
+    gif_r = requests.get(
+        "https://api.giphy.com/v1/gifs/random",
+        params={"tag": args.tag, "api_key": config["GIPHY_API_KEY"], "rating": "pg-13"},
+    )
 
 if gif_r_dict := gif_r.json()["data"]:
     gif_url = gif_r_dict["images"]["original"]["url"].split("?")[0]
@@ -35,5 +49,8 @@ if gif_r_dict := gif_r.json()["data"]:
         json={"event": "message", "content": f"/giphy {args.tag} \n{gif_url}"},
     )
 else:
-    print(f"No gif found for '{args.tag}'.", file=sys.stderr)
+    print(
+        f"No gif found for {'ID' if args.id else 'tag'} '{args.id or args.tag}'.",
+        file=sys.stderr,
+    )
     sys.exit(1)
